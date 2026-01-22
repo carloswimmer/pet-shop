@@ -1,19 +1,7 @@
-type Props = {
-  title: string;
-};
-
-const Component = ({ title }: Props) => {
-  return (
-    <div>
-      <h2>{title}</h2>
-    </div>
-  );
-};
-
 export default function Home() {
   return (
     <div>
-      <Component title={4} />
+      <h2>Hello World</h2>
     </div>
   );
 }
