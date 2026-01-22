@@ -8,5 +8,5 @@ pre-commit:
 pre-push:
   commands:
     validate:
-      glob: "**/*.{ts, tsx}"
+      glob: "**/*.{ts,tsx}"
       run: pnpm validate:typecheck

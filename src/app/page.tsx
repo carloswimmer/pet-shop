@@ -13,7 +13,7 @@ const Component = ({ title }: Props) => {
 export default function Home() {
   return (
     <div>
-      <Component title={2} />
+      <Component title={4} />
     </div>
   );
 }
