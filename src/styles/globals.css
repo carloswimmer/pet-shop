@@ -17,6 +17,7 @@
   /* Border Colors */
   --color-border-primary: #3e3c41;
   --color-border-secondary: #86818c;
+  --color-border-tertiary: #2e2c30;
   --color-border-brand: #9282fa;
   --color-border-divisor: #353339;
 
@@ -208,6 +209,9 @@
   }
   .border-border-secondary {
     border-color: var(--color-border-secondary);
+  }
+  .border-border-tertiary {
+    border-color: var(--color-border-tertiary);
   }
   .border-border-brand {
     border-color: var(--color-border-brand);
