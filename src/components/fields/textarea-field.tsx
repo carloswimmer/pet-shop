@@ -35,14 +35,12 @@ export const TextareaField = ({
           {label}
         </FormLabel>
         <FormControl>
-          <div className="relative">
-            <Textarea
-              placeholder={input.placeholder}
-              className="resize-none"
-              {...field}
-              value={typeof field.value === 'string' ? field.value : ''}
-            />
-          </div>
+          <Textarea
+            placeholder={input.placeholder}
+            className="resize-none"
+            {...field}
+            value={typeof field.value === 'string' ? field.value : ''}
+          />
         </FormControl>
         <FormMessage />
       </FormItem>

@@ -1,11 +1,8 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { format } from 'date-fns';
-import { CalendarIcon, Dog, Phone, User } from 'lucide-react';
+import { Dog, Phone, User } from 'lucide-react';
 import { useForm } from 'react-hook-form';
-import { IMaskInput } from 'react-imask';
-import type z from 'zod';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -15,21 +12,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { cn } from '@/lib/utils';
+import { Form } from '@/components/ui/form';
 import {
   type AppointmentFormValues,
   appointmentFormSchema,
 } from '@/schema/appointmentFormSchema';
 import { DateField, MaskedField, TextareaField, TextField } from '../fields';
-import { Popover, PopoverTrigger } from '../ui/popover';
 
 export const AppointmentForm = () => {
   const form = useForm<AppointmentFormValues>({
