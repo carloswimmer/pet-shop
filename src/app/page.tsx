@@ -5,9 +5,8 @@ import { APPOINTMENTS_MOCK_DATA, groupAppointmentsByPeriod } from '@/utils';
 
 export default async function Home() {
   const appointments = await prisma.appointment.findMany();
-  console.log('IN DB', appointments);
 
-  const periods = groupAppointmentsByPeriod(APPOINTMENTS_MOCK_DATA);
+  const periods = groupAppointmentsByPeriod(appointments);
   return (
     <div className="bg-background-primary p-6">
       <div className="flex items-center justify-between mb-8">

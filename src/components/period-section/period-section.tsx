@@ -8,28 +8,28 @@ type PeriodSectionProps = {
 };
 
 const periodIcons: Record<Period, ReactNode> = {
-  morning: <Sun className='text-accent-blue' />,
-  afternoon: <Cloudy className='text-accent-orange' />,
-  evening: <Moon className='text-accent-yellow' />,
+  morning: <Sun className="text-accent-blue" />,
+  afternoon: <Cloudy className="text-accent-orange" />,
+  evening: <Moon className="text-accent-yellow" />,
 };
 
 export const PeriodSection = ({ period }: PeriodSectionProps) => {
   return (
-    <section className='mb-8 bg-background-tertiary rounded-xl'>
-      <div className='flex items-center justify-between px-5 py-3 border-b border-border-tertiary'>
-        <div className='flex items-center gap-2'>
+    <section className="mb-8 bg-background-tertiary rounded-xl">
+      <div className="flex items-center justify-between px-5 py-3 border-b border-border-tertiary">
+        <div className="flex items-center gap-2">
           {periodIcons[period.type]}
-          <h2 className='text-label-large-size text-content-primary'>
+          <h2 className="text-label-large-size text-content-primary">
             {period.title}
           </h2>
         </div>
-        <span className='text-label-large-size text-content-secondary'>
+        <span className="text-label-large-size text-content-secondary">
           {period.timeRange}
         </span>
       </div>
 
       {period.appointments.length > 0 ? (
-        <div className='px-5'>
+        <div className="px-5">
           <div>
             {period.appointments.map((appointment, index) => (
               <AppointmentCard
@@ -41,7 +41,9 @@ export const PeriodSection = ({ period }: PeriodSectionProps) => {
           </div>
         </div>
       ) : (
-        <p>No appointments for this period</p>
+        <p className="text-paragraph-medium-size text-content-secondary p-5 text-center">
+          No appointments for this period
+        </p>
       )}
     </section>
   );

@@ -52,10 +52,15 @@ export const AppointmentForm = () => {
       ...data,
       scheduleAt: scheduleAtWithTime,
     });
-    console.log('RETURNED ON CREATE', result);
+
+    if (result && 'error' in result) {
+      toast.error(result.error);
+      return;
+    }
 
     setOpen(false);
     toast.success('Appointment succesfully booked!');
+    form.reset();
   };
 
   return (
