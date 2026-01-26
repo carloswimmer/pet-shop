@@ -1,8 +1,15 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Dog, Phone, User } from 'lucide-react';
+import { Clock, Dog, Phone, User } from 'lucide-react';
 import { useForm } from 'react-hook-form';
+import {
+  DateField,
+  MaskedField,
+  SelectField,
+  TextareaField,
+  TextField,
+} from '@/components/fields';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -17,7 +24,7 @@ import {
   type AppointmentFormValues,
   appointmentFormSchema,
 } from '@/schema/appointmentFormSchema';
-import { DateField, MaskedField, TextareaField, TextField } from '../fields';
+import { generateTimeOptions } from '@/utils/generate-time-options';
 
 export const AppointmentForm = () => {
   const form = useForm<AppointmentFormValues>({
@@ -97,6 +104,15 @@ export const AppointmentForm = () => {
               input={{ placeholder: 'Select a date' }}
             />
 
+            <SelectField
+              form={form}
+              name="time"
+              label="Time"
+              icon={<Clock className="h-4 w-4" />}
+              input={{ placeholder: '--:-- --' }}
+              options={TIME_OPTIONS}
+            />
+
             <Button type="submit">Save</Button>
           </form>
         </Form>
@@ -104,3 +120,5 @@ export const AppointmentForm = () => {
     </Dialog>
   );
 };
+
+const TIME_OPTIONS = generateTimeOptions(9, 21);

@@ -53,7 +53,7 @@ export const DateField = ({ form, name, label, input }: DateFieldProps) => (
                     <span>{input.placeholder}</span>
                   )}
                 </div>
-                <ChevronDownIcon className="opacity-50 h-4 w-4" />
+                <ChevronDownIcon className="opacity-90 h-4 w-4" />
               </Button>
             </FormControl>
           </PopoverTrigger>
