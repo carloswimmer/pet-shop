@@ -2,7 +2,10 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Clock, Dog, Loader2, Phone, User } from 'lucide-react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { createAppointment } from '@/app/actions';
 import {
   DateField,
   MaskedField,
@@ -27,6 +30,7 @@ import {
 import { generateTimeOptions } from '@/utils/generate-time-options';
 
 export const AppointmentForm = () => {
+  const [open, setOpen] = useState(false);
   const form = useForm<AppointmentFormValues>({
     resolver: zodResolver(appointmentFormSchema),
     defaultValues: {
@@ -39,12 +43,23 @@ export const AppointmentForm = () => {
     },
   });
 
-  const onSubmit = (data: AppointmentFormValues) => {
-    console.log(data);
+  const onSubmit = async (data: AppointmentFormValues) => {
+    const [hour, minutes] = data.time.split(':');
+    const scheduleAtWithTime = new Date(data.scheduleAt);
+    scheduleAtWithTime.setHours(Number(hour), Number(minutes), 0, 0);
+
+    const result = await createAppointment({
+      ...data,
+      scheduleAt: scheduleAtWithTime,
+    });
+    console.log('RETURNED ON CREATE', result);
+
+    setOpen(false);
+    toast.success('Appointment succesfully booked!');
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="brand">New appointment</Button>
       </DialogTrigger>
@@ -135,4 +150,4 @@ export const AppointmentForm = () => {
   );
 };
 
-const TIME_OPTIONS = generateTimeOptions(9, 21);
+const TIME_OPTIONS = generateTimeOptions(9, 21, { start: 12, end: 13 });
