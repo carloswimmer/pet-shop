@@ -1,5 +1,6 @@
 'use server';
 
+import { revalidatePath } from 'next/cache';
 import z from 'zod';
 import { prisma } from '@/lib/prisma';
 
@@ -25,7 +26,8 @@ export async function createAppointment(data: AppointmentSchema) {
 
     if (!isMorning && !isAfternoon && !isEvening) {
       return {
-        error: 'Appointments can only be done between 9h-12h, 13h-18h, 19h-21h',
+        error:
+          'Appointments can only be done between 9h and 12h, 13h and 18h, 19h and 21h',
       };
     }
 
@@ -37,10 +39,10 @@ export async function createAppointment(data: AppointmentSchema) {
       return { error: 'Sorry, this appointment is already reserved' };
     }
 
-    const result = await prisma.appointment.create({ data: { ...parsedData } });
-    console.log('SAVED', result);
-    return result;
+    await prisma.appointment.create({ data: { ...parsedData } });
+
+    revalidatePath('/');
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 }

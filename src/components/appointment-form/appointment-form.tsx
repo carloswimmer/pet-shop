@@ -30,7 +30,7 @@ import {
 import { generateTimeOptions } from '@/utils/generate-time-options';
 
 export const AppointmentForm = () => {
-  const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const form = useForm<AppointmentFormValues>({
     resolver: zodResolver(appointmentFormSchema),
     defaultValues: {
@@ -58,13 +58,13 @@ export const AppointmentForm = () => {
       return;
     }
 
-    setOpen(false);
+    setIsOpen(false);
     toast.success('Appointment succesfully booked!');
     form.reset();
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button variant="brand">New appointment</Button>
       </DialogTrigger>
