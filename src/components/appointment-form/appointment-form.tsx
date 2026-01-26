@@ -1,7 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Clock, Dog, Phone, User } from 'lucide-react';
+import { Clock, Dog, Loader2, Phone, User } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import {
   DateField,
@@ -35,6 +35,7 @@ export const AppointmentForm = () => {
       phone: '',
       description: '',
       scheduleAt: undefined,
+      time: '',
     },
   });
 
@@ -97,23 +98,36 @@ export const AppointmentForm = () => {
               input={{ placeholder: 'Service description' }}
             />
 
-            <DateField
-              form={form}
-              name="scheduleAt"
-              label="Date"
-              input={{ placeholder: 'Select a date' }}
-            />
+            <div className="space-y-4 md:grid md:grid-cols-2 md:gap-4 md:space-y-0">
+              <DateField
+                form={form}
+                name="scheduleAt"
+                label="Date"
+                input={{ placeholder: 'Select a date' }}
+              />
 
-            <SelectField
-              form={form}
-              name="time"
-              label="Time"
-              icon={<Clock className="h-4 w-4" />}
-              input={{ placeholder: '--:-- --' }}
-              options={TIME_OPTIONS}
-            />
+              <SelectField
+                form={form}
+                name="time"
+                label="Time"
+                icon={<Clock className="h-4 w-4" />}
+                input={{ placeholder: '--:-- --' }}
+                options={TIME_OPTIONS}
+              />
+            </div>
 
-            <Button type="submit">Save</Button>
+            <div className="flex justify-end">
+              <Button
+                type="submit"
+                variant="brand"
+                disabled={form.formState.isSubmitting}
+              >
+                {form.formState.isSubmitting && (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                )}
+                Book
+              </Button>
+            </div>
           </form>
         </Form>
       </DialogContent>
