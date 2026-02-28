@@ -2,10 +2,10 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Clock, Dog, Loader2, Phone, User } from 'lucide-react';
-import { useState } from 'react';
+import { type ReactNode, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import { createAppointment } from '@/app/actions';
+import { createAppointment, updateAppointment } from '@/app/actions';
 import {
   DateField,
   MaskedField,
@@ -27,9 +27,18 @@ import {
   type AppointmentFormValues,
   appointmentFormSchema,
 } from '@/schema/appointmentFormSchema';
+import type { Appointment } from '@/types/appointment';
 import { generateTimeOptions } from '@/utils/generate-time-options';
 
-export const AppointmentForm = () => {
+type AppointmentFormProps = {
+  appointment?: Appointment;
+  children: ReactNode;
+};
+
+export const AppointmentForm = ({
+  children,
+  appointment,
+}: AppointmentFormProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const form = useForm<AppointmentFormValues>({
     resolver: zodResolver(appointmentFormSchema),
@@ -43,15 +52,29 @@ export const AppointmentForm = () => {
     },
   });
 
+  useEffect(() => {
+    if (appointment) {
+      form.reset(appointment);
+      return;
+    }
+    form.reset();
+  }, [appointment, form]);
+
   const onSubmit = async (data: AppointmentFormValues) => {
     const [hour, minutes] = data.time.split(':');
     const scheduleAtWithTime = new Date(data.scheduleAt);
     scheduleAtWithTime.setHours(Number(hour), Number(minutes), 0, 0);
+    const isEdit = !!appointment?.id;
 
-    const result = await createAppointment({
-      ...data,
-      scheduleAt: scheduleAtWithTime,
-    });
+    const result = isEdit
+      ? await updateAppointment(appointment?.id, {
+          ...data,
+          scheduleAt: scheduleAtWithTime,
+        })
+      : await createAppointment({
+          ...data,
+          scheduleAt: scheduleAtWithTime,
+        });
 
     if (result && 'error' in result) {
       toast.error(result.error);
@@ -59,15 +82,13 @@ export const AppointmentForm = () => {
     }
 
     setIsOpen(false);
-    toast.success('Appointment succesfully booked!');
+    toast.success(`Appointment  succesfully ${isEdit ? 'edited' : 'booked'}!`);
     form.reset();
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <Button variant="brand">New appointment</Button>
-      </DialogTrigger>
+      <DialogTrigger asChild>{children}</DialogTrigger>
 
       <DialogContent
         variant="appointment"
