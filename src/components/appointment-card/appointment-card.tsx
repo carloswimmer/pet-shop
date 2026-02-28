@@ -1,7 +1,27 @@
-import { Pen } from 'lucide-react';
+'use client';
+
+import {
+  Trash2 as DeleteIcon,
+  Pen as EditIcon,
+  Loader2 as LoadingIcon,
+} from 'lucide-react';
+import { useState } from 'react';
+import { toast } from 'sonner';
+import { deleteAppointment } from '@/app/actions';
 import { cn } from '@/lib/utils';
 import type { Appointment } from '@/types/appointment';
 import { AppointmentForm } from '../appointment-form';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '../ui/alert-dialog';
 import { Button } from '../ui/button';
 
 type AppointmentCardProps = {
@@ -13,6 +33,21 @@ export const AppointmentCard = ({
   appointment,
   isFirstInSection = false,
 }: AppointmentCardProps) => {
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    const result = await deleteAppointment(appointment.id);
+
+    if (result?.error) {
+      toast.error(result.error);
+      return;
+    }
+
+    toast.success('Appointment succesfully deleted');
+    setIsDeleting(false);
+  };
+
   return (
     <div
       className={cn(
@@ -46,12 +81,40 @@ export const AppointmentCard = ({
         </span>
       </div>
 
-      <div className="flex justify-end items-center text-right mt-2 md:mt-0 col-span-2 md:col-span-1">
+      <div className="flex justify-end items-center text-right mt-2 md:mt-0 col-span-2 md:col-span-1 gap-2">
         <AppointmentForm appointment={appointment}>
           <Button variant="edit" size="icon">
-            <Pen size={16} />
+            <EditIcon size={16} />
           </Button>
         </AppointmentForm>
+
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button variant="remove" size="icon">
+              <DeleteIcon size={16} />
+            </Button>
+          </AlertDialogTrigger>
+
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Delete appointment</AlertDialogTitle>
+              <AlertDialogDescription>
+                Are you sure you want to delete this appointment? This action
+                can not be reverted.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={handleDelete} disabled={isDeleting}>
+                {isDeleting && (
+                  <LoadingIcon className="mr-2 h-4 w-4 animated-spin" />
+                )}
+                Confirm
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </div>
   );

@@ -44,6 +44,8 @@ export async function createAppointment(data: AppointmentSchema) {
     revalidatePath('/');
   } catch (error) {
     console.error(error);
+
+    return { error: 'Error when creating appointment. Try again.' };
   }
 }
 
@@ -77,5 +79,20 @@ export async function updateAppointment(id: string, data: AppointmentSchema) {
     revalidatePath('/');
   } catch (error) {
     console.error(error);
+
+    return { error: 'Error when updating appointment. Try again.' };
+  }
+}
+
+export async function deleteAppointment(id: string) {
+  try {
+    await prisma.appointment.delete({
+      where: { id },
+    });
+    revalidatePath('/');
+  } catch (error) {
+    console.log(error);
+
+    return { error: 'Error when deleting appointment. Try again.' };
   }
 }
