@@ -1,5 +1,6 @@
 'use server';
 
+import { endOfDay, startOfDay } from 'date-fns';
 import { revalidatePath } from 'next/cache';
 import z from 'zod';
 import { prisma } from '@/lib/prisma';
@@ -94,5 +95,25 @@ export async function deleteAppointment(id: string) {
     console.log(error);
 
     return { error: 'Error when deleting appointment. Try again.' };
+  }
+}
+
+export async function findAppointmentsByDate(selectedDate: Date) {
+  try {
+    return await prisma.appointment.findMany({
+      where: {
+        scheduleAt: {
+          gte: startOfDay(selectedDate),
+          lte: endOfDay(selectedDate),
+        },
+      },
+      orderBy: {
+        scheduleAt: 'asc',
+      },
+    });
+  } catch (error) {
+    console.error(error);
+
+    return [];
   }
 }

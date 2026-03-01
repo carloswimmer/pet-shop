@@ -1,9 +1,10 @@
-import { endOfDay, parseISO, startOfDay } from 'date-fns';
+import { parseISO } from 'date-fns';
 import { AppointmentForm } from '@/components/appointment-form';
+import { DatePicker } from '@/components/date-picker';
 import { PeriodSection } from '@/components/period-section';
 import { Button } from '@/components/ui/button';
-import { prisma } from '@/lib/prisma';
 import { groupAppointmentsByPeriod } from '@/utils';
+import { findAppointmentsByDate } from './actions';
 
 type DateParam = {
   date?: string;
@@ -15,27 +16,21 @@ type HomeProps = {
 export default async function Home({ searchParams }: HomeProps) {
   const { date } = await searchParams;
   const selectedDate = date ? parseISO(date) : new Date();
-  const appointments = await prisma.appointment.findMany({
-    where: {
-      scheduleAt: {
-        gte: startOfDay(selectedDate),
-        lte: endOfDay(selectedDate),
-      },
-    },
-    orderBy: {
-      scheduleAt: 'asc',
-    },
-  });
-
+  const appointments = await findAppointmentsByDate(selectedDate);
   const periods = groupAppointmentsByPeriod(appointments);
+
   return (
     <div className="bg-background-primary p-6">
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-center justify-between mb-8 flex-wrap gap-8">
         <div>
           <h1 className="text-title text-content-primary mb-2">Your Agenda</h1>
           <p className="text-paragraph-small text-content-secondary">
             Here you can see all the clients and services scheduled for today.
           </p>
+        </div>
+
+        <div className="flex items-center gap-4">
+          <DatePicker />
         </div>
       </div>
 
