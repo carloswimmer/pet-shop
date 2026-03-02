@@ -1,11 +1,12 @@
 import type { Appointment } from '@prisma/client';
 import type { Period } from '@/types/appointment';
 
-const getPeriod = (hour: number): Period => {
-  if (hour >= 9 && hour < 12) {
+const getPeriod = (time: string): Period => {
+  const hour = time.split(':')[0];
+  if (hour >= '09' && hour < '12') {
     return 'morning';
   }
-  if (hour >= 13 && hour < 18) {
+  if (hour >= '13' && hour < '18') {
     return 'afternoon';
   }
   return 'evening';
@@ -15,12 +16,9 @@ export const groupAppointmentsByPeriod = (appointments: Appointment[]) => {
   const transformedAppointments = appointments.map(
     (appointment: Appointment) => ({
       ...appointment,
-      time: appointment.scheduleAt.toLocaleTimeString('en-GB', {
-        hour: '2-digit',
-        minute: '2-digit',
-      }),
+      time: formatDateTime(appointment.scheduleAt),
       service: appointment.description,
-      period: getPeriod(appointment.scheduleAt.getHours()),
+      period: getPeriod(formatDateTime(appointment.scheduleAt)),
     }),
   );
 
@@ -56,14 +54,25 @@ export const groupAppointmentsByPeriod = (appointments: Appointment[]) => {
   ];
 };
 
-export const calculatePeriod = (hour: number) => {
-  const isMorning = hour >= 9 && hour < 12;
-  const isAfternoon = hour >= 13 && hour < 18;
-  const isEvening = hour >= 19 && hour < 21;
+export const calculatePeriod = (time: string) => {
+  const hour = time.split(':')[0];
+  console.log(hour);
+  const isMorning = hour >= '09' && hour < '12';
+  const isAfternoon = hour >= '13' && hour < '18';
+  const isEvening = hour >= '19' && hour < '21';
 
   return {
     isMorning,
     isAfternoon,
     isEvening,
   };
+};
+
+export const formatDateTime = (date: Date) => {
+  return date.toLocaleTimeString('de-DE', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+    timeZone: 'Europe/Berlin',
+  });
 };

@@ -4,7 +4,7 @@ import { endOfDay, startOfDay } from 'date-fns';
 import { revalidatePath } from 'next/cache';
 import z from 'zod';
 import { prisma } from '@/lib/prisma';
-import { calculatePeriod } from '@/utils';
+import { calculatePeriod, formatDateTime } from '@/utils';
 
 const appointmentSchema = z.object({
   tutorName: z.string(),
@@ -21,7 +21,7 @@ export async function createAppointment(data: AppointmentSchema) {
     const parsedData = appointmentSchema.parse(data);
 
     const { scheduleAt } = parsedData;
-    const hour = scheduleAt.getHours();
+    const hour = formatDateTime(scheduleAt);
     const { isMorning, isAfternoon, isEvening } = calculatePeriod(hour);
 
     if (!isMorning && !isAfternoon && !isEvening) {
@@ -54,7 +54,7 @@ export async function updateAppointment(id: string, data: AppointmentSchema) {
     const parsedData = appointmentSchema.parse(data);
 
     const { scheduleAt } = parsedData;
-    const hour = scheduleAt.getHours();
+    const hour = formatDateTime(scheduleAt);
     const { isMorning, isAfternoon, isEvening } = calculatePeriod(hour);
 
     if (!isMorning && !isAfternoon && !isEvening) {

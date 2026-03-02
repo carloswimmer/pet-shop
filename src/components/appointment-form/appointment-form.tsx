@@ -1,6 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { setHours, setMinutes } from 'date-fns';
 import { Clock, Dog, Loader2, Phone, User } from 'lucide-react';
 import { type ReactNode, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -62,8 +63,10 @@ export const AppointmentForm = ({
 
   const onSubmit = async (data: AppointmentFormValues) => {
     const [hour, minutes] = data.time.split(':');
-    const scheduleAtWithTime = new Date(data.scheduleAt);
-    scheduleAtWithTime.setHours(Number(hour), Number(minutes), 0, 0);
+    const scheduleAtWithTime = setMinutes(
+      setHours(data.scheduleAt, Number(hour)),
+      Number(minutes),
+    );
     const isEdit = !!appointment?.id;
 
     const result = isEdit
