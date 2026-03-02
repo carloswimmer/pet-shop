@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter, Inter_Tight } from 'next/font/google';
 import { Toaster } from 'sonner';
 import '@/styles/globals.css';
+import { Header } from '@/components/header';
 
 const inter = Inter({
   variable: '--font-inter',
@@ -29,8 +30,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} ${interTight.variable} antialiased`}>
-        {children}
-        <Toaster position="top-right" />
+        <Header />
+
+        <main className="flex flex-1 flex-col mt-12 max-w-3xl mx-auto">
+          {children}
+          <Toaster position="top-right" />
+        </main>
       </body>
     </html>
   );
